@@ -5,10 +5,12 @@ import tkinter as tk
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.w, self.h = 15, 15
-        self.Matrix = [[0 for x in range(self.w)] for y in range(self.h)] 
+        self.w, self.h = 30, 30
+        self.Matrix = [[0 for x in range(self.w)] for y in range(self.h)]
+        self.Matrix[0][0] = 2
+        self.Matrix[1][0] = 3
+        self.Matrix[2][0] = 4 
         #self.butto
-
         self.display_grid()
 
     def on_button_1_click(self, event):
@@ -16,7 +18,7 @@ class App(tk.Tk):
         self.Matrix[event.widget._coords[0]][event.widget._coords[1]]= 1
         #event.widget.color_change = "black"
         #self.display_grid()
-        button = tk.Button(self, text="", width=4, height=2, bg="black")
+        button = tk.Button(self, text="", width=1, height=1, bg="black")
         x = event.widget._coords[0]
         y = event.widget._coords[1]
         button._coords = x, y
@@ -27,10 +29,10 @@ class App(tk.Tk):
     
     def on_button_2_click(self, event):
         print('on_button_2_click:{}'.format(event.widget._coords))
-        self.Matrix[event.widget._coords[0]][event.widget._coords[1]]= 2
+        self.Matrix[event.widget._coords[0]][event.widget._coords[1]]= 5
         #event.widget.color_change = "black"
         #self.display_grid()
-        button = tk.Button(self, text="", width=4, height=2, bg="blue")
+        button = tk.Button(self, text="", width=1, height=1, bg="blue")
         x = event.widget._coords[0]
         y = event.widget._coords[1]
         button._coords = x, y
@@ -41,7 +43,11 @@ class App(tk.Tk):
     def display_grid(self):
       for x in range(self.h):
           for y in range(self.w):
-              button = tk.Button(self, text="", width=4, height=2)
+              if(self.Matrix[x][y]==2 or self.Matrix[x][y]==3 or self.Matrix[x][y]==4):
+                  button = tk.Button(self, text="", width=1, height=1, bg="red")
+              else:
+                  button = tk.Button(self, text="", width=1, height=1, bg="peru")
+
               button._coords = x, y
               button.grid(row=x, column=y)
               button.bind("<Button-1>", self.on_button_1_click)
