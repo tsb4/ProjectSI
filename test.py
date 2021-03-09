@@ -23,7 +23,7 @@ class App(tk.Tk):
         y = event.widget._coords[1]
         button._coords = x, y
         button.grid(row=x, column=y)
-        button.bind("<Button-1>", self.on_button_1_click)
+        button.bind("<Button-1>", self.on_button_3_click)
         print(self.Matrix)
 
     
@@ -40,13 +40,26 @@ class App(tk.Tk):
         button.bind("<Button-3>", self.on_button_2_click)
         print(self.Matrix)
     
+    def on_button_3_click(self, event):
+        print('on_button_3_click:{}'.format(event.widget._coords))
+        self.Matrix[event.widget._coords[0]][event.widget._coords[1]]=6
+        #event.widget.color_change = "black"
+        #self.display_grid()
+        button = tk.Button(self, text="", width=1, height=1, bg="peru")
+        x = event.widget._coords[0]
+        y = event.widget._coords[1]
+        button._coords = x, y
+        button.grid(row=x, column=y)
+        button.bind("<Button-1>", self.on_button_3_click)
+        print(self.Matrix)
+    
     def display_grid(self):
       for x in range(self.h):
           for y in range(self.w):
               if(self.Matrix[x][y]==2 or self.Matrix[x][y]==3 or self.Matrix[x][y]==4):
                   button = tk.Button(self, text="", width=1, height=1, bg="red")
               else:
-                  button = tk.Button(self, text="", width=1, height=1, bg="peru")
+                  button = tk.Button(self, text="", width=1, height=1)
 
               button._coords = x, y
               button.grid(row=x, column=y)
