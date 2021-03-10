@@ -70,69 +70,178 @@ class App(tk.Tk):
         button.bind("<Button-1>", self.on_button_3_click)
         print(self.Matrix)
 
-    def on_start_button(self):
-        narra = numpy.array(self.Matrix)
-        print(narra)
-        x,y = 1,20
-        print("STARTING")
-        button = tk.Button(self, text="G", width=1, height=1, bg="green")
+    #Função que inicializa o fluxo de do robo na segunda etapa
+    #Por enquanto não foram criadas as regras de produção, apenas um fluxo de entendimento
+    def on_start_button_second_part(self,x_atual,y_atual):
+
+        while(input("Entrada") != 0):
+            x_anterior, y_anterior = x_atual, y_atual
+
+            #Esse trecho ajuda a entender a Matrix a cada interação
+            #narra = numpy.array(self.Matrix)
+            #print(narra)
+
+            #Esse trecho ajuda a testar o codigo, a cada interação é passado o parametro de X e Y pelo terminal indicando as direções que o robo irá seguir
+            print("[",x_anterior," | ", y_anterior,"]")
+            x_atual = int(input("Valor de x "))
+            y_atual = int(input("Valor de y "))
+            print("Novo ","[",x_atual," | ", y_atual,"]")
+
+            
+            #ROBO INDO PARA A ESQUERDA
+            if(x_anterior == x_atual and y_anterior > y_atual):
+                self.create_matriz_image(x_atual,y_atual,"left")
+                self.display_image(x_atual,y_atual,270)
+                for i in range(3):
+                    x_reset = x_anterior+i
+                    cor = self.matrizBase[x_reset][y_atual+3]
+                    #self.Matrix[x_reset][y+3] = self.matrizBase[x_reset][y+3] VERIFICAR ESSE TRECHO DE CODIGO PARA QUE A MATRIX SENDO UTILIZADA FIQUE COM ZERO APOS O ROBO ANDAR
+                    print("Valor da cor ",cor) 
+                    if(cor in (0,2,3,4,5)):
+                        button = tk.Button(self, text="", width=1, height=1)
+                        button._coords = x_reset,y_atual+3
+                        button.grid(row=x_reset, column=y_atual+3)
+                    elif(cor == 7):
+                        button = tk.Button(self, text="", width=1, height=1)
+                        button._coords = x_reset,y_atual+3
+                        button.grid(row=x_reset, column=y_atual+3)
+
+            #ROBO INDO PARA A DIREITA
+            elif(x_anterior == x_atual and y_anterior < y_atual):
+                self.create_matriz_image(x_atual,y_atual,"right")
+                self.display_image(x_atual,y_atual,90)
+                for i in range(3):
+                    x_reset = x_anterior+i
+                    cor = self.matrizBase[x_reset][y_anterior]
+                    #self.Matrix[x_reset][y_anterior] = self.matrizBase[x_reset][y_anterior]
+                    print("Valor da cor ",cor) 
+                    if(cor in (0,2,3,4,5)):
+                        button = tk.Button(self, text="", width=1, height=1)
+                        button._coords = x_reset,y_anterior
+                        button.grid(row=x_reset, column=y_anterior)
+                    elif(cor == 7):
+                        button = tk.Button(self, text="", width=1, height=1)
+                        button._coords = x_reset,y_anterior
+                        button.grid(row=x_reset, column=y_anterior)
+            
+            #ROBO INDO PARA CIMA
+            elif(y_anterior == y_atual and x_anterior > x_atual):
+                self.create_matriz_image(x_atual,y_atual,"up")
+                self.display_image(x_atual,y_atual,180)
+                for i in range(3):
+                    y_reset = y_anterior+i
+                    cor = self.matrizBase[x_atual+3][y_reset]
+                    #self.Matrix[x+3][y_reset] = self.matrizBase[x_reset][y+3]
+                    print("Valor da cor ",cor) 
+                    if(cor in (0,2,3,4,5)):
+                        button = tk.Button(self, text="", width=1, height=1)
+                        button._coords = x_atual+3,y_reset
+                        button.grid(row=x_atual+3, column=y_reset)
+                    elif(cor == 7):
+                        button = tk.Button(self, text="", width=1, height=1)
+                        button._coords = x_atual+3,y_reset
+                        button.grid(row=x_atual+3, column=y_reset)
+
+            #ROBO INDO PARA BAIXO
+            elif(y_anterior == y_atual and x_anterior < x_atual):
+                self.create_matriz_image(x_atual,y_atual,"down")
+                self.display_image(x_atual,y_atual,0)
+                for i in range(3):
+                    y_reset = y_anterior+i
+                    cor = self.matrizBase[x_anterior][y_reset]
+                    #self.Matrix[x_anterior][y_reset] = self.matrizBase[x_reset][y+3]
+                    print("Valor da cor ",cor) 
+                    if(cor in (0,2,3,4,5)):
+                        button = tk.Button(self, text="", width=1, height=1)
+                        button._coords = x_anterior,y_reset
+                        button.grid(row=x_anterior, column=y_reset)
+                    elif(cor == 7):
+                        button = tk.Button(self, text="", width=1, height=1)
+                        button._coords = x_anterior,y_reset
+                        button.grid(row=x_anterior, column=y_reset)
+
+            elif(x_anterior != x_atual and y_anterior != y_atual):
+                x_atual , y_atual = x_anterior , y_anterior
+                pass
+
+    #Função que coloca a cor desejada no indice da matriz (x,y) escolhidos
+    def create_color_matriz(self, x, y, color):        
+        button = tk.Button(self, text="", width=1, height=1,bg=color)
         button._coords = x,y
         button.grid(row=x, column=y)
-        print(self.Matrix)
-        
-        while(input("Entrada") != 0):
-            xm1, ym1 = x, y
-            x,y = x, y-1
-            self.display_image(x,y)
-            
-            if(xm1 == x and ym1 > y):
-                for i in range(3):
-                    x_reset = xm1+i
-                    cor = self.matrizBase[x_reset][ym1+3]
-                    print("Valor da cor ",cor) 
-                    if(cor == 0):
-                        button = tk.Button(self, text="", width=1, height=1)
-                        button._coords = x_reset,ym1
-                        button.grid(row=x_reset, column=ym1)
-                    elif(cor in (2,3,4,5)):
-                        button = tk.Button(self, text="", width=1, height=1)
-                        button._coords = x_reset,ym1
-                        button.grid(row=x_reset, column=ym1)
-                    elif(cor == 6):
-                        button = tk.Button(self, text="", width=1, height=1,bg="blue")
-                        button._coords = x_reset,ym1
-                        button.grid(row=x_reset, column=ym1)
-            elif(xm1 == x and ym1 < y):
-                for i in range(3):
-                    x_reset = xm1+i
-                    cor = self.matrizBase[x_reset][ym1]
-                    print("Valor da cor ",cor) 
-                    if(cor == 0):
-                        button = tk.Button(self, text="", width=1, height=1)
-                        button._coords = x_reset,ym1
-                        button.grid(row=x_reset, column=ym1)
-                    elif(cor in (2,3,4,5)):
-                        button = tk.Button(self, text="", width=1, height=1)
-                        button._coords = x_reset,ym1
-                        button.grid(row=x_reset, column=ym1)
-                    elif(cor == 6):
-                        button = tk.Button(self, text="", width=1, height=1,bg="blue")
-                        button._coords = x_reset,ym1
-                        button.grid(row=x_reset, column=ym1)
-        
 
-    def display_image(self, x, y):
+    #Esta função funciona para a criação da matriz do robo das diferentes direções que ele irá operar
+    #Dentro desta função, ela já chama a função de criar as cores em vermelho do robo
+    def create_matriz_image(self, x, y, dir):
+
+        if(dir == "up"):
+            print("UP\n")
+            self.Matrix[x][y] = 2
+            self.create_color_matriz(x,y,"red") 
+            self.Matrix[x][y+1] = 3
+            self.create_color_matriz(x,y+1,"red") 
+            self.Matrix[x][y+2] = 4
+            self.create_color_matriz(x,y+2,"red") 
+            
+            for j in range(3):
+                for i in range(1,3):
+                    self.Matrix[x+i][y+j] = 5
+                    self.create_color_matriz(x+i,y+j,"red") 
+        
+        elif(dir == "down"):
+            print("DOWN\n")
+            self.Matrix[x+2][y] = 4
+            self.create_color_matriz(x+2,y,"red") 
+            self.Matrix[x+2][y+1] = 3
+            self.create_color_matriz(x+2,y+1,"red") 
+            self.Matrix[x+2][y+2] = 2
+            self.create_color_matriz(x+2,y+2,"red") 
+            
+            for j in range(3):
+                for i in range(0,2):
+                    self.Matrix[x+i][y+j] = 5
+                    self.create_color_matriz(x+i,y+j,"red") 
+        
+        elif(dir == "right"):
+            print("RIGHT\n")
+            self.Matrix[x][y+2] = 2
+            self.create_color_matriz(x,y+2,"red") 
+            self.Matrix[x+1][y+2] = 3
+            self.create_color_matriz(x+1,y+2,"red") 
+            self.Matrix[x+2][y+2] = 4
+            self.create_color_matriz(x+2,y+2,"red") 
+
+            for j in range(0,2):
+                for i in range(3):
+                    self.Matrix[x+i][y+j] = 5
+                    self.create_color_matriz(x+i,y+j,"red")             
+        
+        elif(dir == "left"):
+            print("LEFT\n")
+            self.Matrix[x][y] = 4
+            self.create_color_matriz(x,y,"red") 
+            self.Matrix[x+1][y] = 3
+            self.create_color_matriz(x+1,y,"red") 
+            self.Matrix[x+2][y] = 2
+            self.create_color_matriz(x+2,y,"red") 
+            
+            for j in range(1,3):
+                for i in range(3):
+                    self.Matrix[x+i][y+j] = 5
+                    self.create_color_matriz(x+i,y+j,"red")
+    
+
+    #O parametro GRAU define como a imagem vai aparecer na matriz (pra baixo, pra cima, pra direita ou esquerda)
+    def display_image(self, x, y, grau):
         load = Image.open("robot.jpg")
-        load = load.rotate(90)
+        load = load.rotate(grau)
         load = load.resize((100,70))
         render = ImageTk.PhotoImage(load)
         img = tk.Label(self, image=render)
         img.image = render
         img.grid(row=x, column=y, rowspan=3, columnspan=3)
-    
 
 
-    
     def display_grid(self):
         for x in range(self.h):
             for y in range(self.w):
@@ -152,21 +261,14 @@ class App(tk.Tk):
         self.display_image(0, 0)
       
 
-    
+    #Esta função inicia a segunda parte de identificações que o robo irá fazer
+    #Nesta parte não tem linhas, apenas as paredes (em azul com valor de 6), e os objetos a serem coletados (em bege no valor de 7)
+    #O robo começa na posição 1,1 na matriz geral, e sua matriz interna possui os valores de 2,3,4 para os sensores (esta parte esta em analise, já que na segunda etapa
+    #   talvez nao precisemos desses valores e sim falar que existem apenas dois sensores, um ultrassonico e outro de cor para identificar os objetos), e o restante do corpo
+    #   do robo possui 5 como valor, e todos em vermelho
     def display_grid_second_part(self):
         self.Matrix = [[0 for x in range(self.w)] for y in range(self.h)]
-
-        x ,y = 1,20
-        
-        for j in range(y,y+3):
-            if(j==y+2):
-                self.Matrix[x][y+2] = 2
-                self.Matrix[x+1][y+2] = 3
-                self.Matrix[x+2][y+2] = 4
-            else:
-                for i in range(x,x+3):
-                    self.Matrix[x+i][y+j]=5
-        self.display_image(x,y)
+        x_ini ,y_ini = 10,1
 
         objects = []
         for i in range(3):
@@ -182,15 +284,17 @@ class App(tk.Tk):
                 if(x==0 or y==0 or x==self.h-1 or y ==self.w-1):
                     self.Matrix[x][y] = 6
                     button = tk.Button(self, text="", width=1, height=1, bg="blue")
-                elif(self.Matrix[x][y]==4 or self.Matrix[x][y]==3 or self.Matrix[x][y]==2 or self.Matrix[x][y]==5):
-                    button = tk.Button(self, text="", width=1, height=1, bg="red")
+                #elif(self.Matrix[x][y]==4 or self.Matrix[x][y]==3 or self.Matrix[x][y]==2 or self.Matrix[x][y]==5):
+                #    button = tk.Button(self, text="", width=1, height=1, bg="red")
                 elif(self.Matrix[x][y]==7):
                     button = tk.Button(self, text="", width=1, height=1, bg="peru")   
                 button._coords = x, y
                 button.grid(row=x, column=y)
-                
+        
+        self.create_matriz_image(x_ini,y_ini,"right")
+        self.display_image(x_ini,y_ini,90)
         self.matrizBase = self.Matrix
-        self.on_start_button()
+        self.on_start_button_second_part(x_ini,y_ini)
 
 if __name__ == '__main__':
     App().mainloop()
