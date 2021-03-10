@@ -1,8 +1,9 @@
 
-
+from PIL import Image, ImageTk
 import tkinter as tk
 import random
-from PIL import Image, ImageTk
+import time
+import numpy
 
 ##Convencoes Importantes
 ##Matriz
@@ -23,6 +24,7 @@ class App(tk.Tk):
         super().__init__()
         self.w, self.h = 30, 30
         self.Matrix = [[0 for x in range(self.w)] for y in range(self.h)]
+        self.matrizBase = self.Matrix
         for j in range(3):
             if(j==2):
                 self.Matrix[0][2] = 2
@@ -31,8 +33,8 @@ class App(tk.Tk):
             else:
                 for i in range(3):
                     self.Matrix[i][j]=5
-        self.display_grid()
-        #self.display_grid_second_part()
+        #self.display_grid()
+        self.display_grid_second_part()
 
     def on_button_1_click(self, event):
         print('on_button_1_click:{}'.format(event.widget._coords))
@@ -69,9 +71,56 @@ class App(tk.Tk):
         print(self.Matrix)
 
     def on_start_button(self):
-        #AQUI COMEÇA O ALGORITMO
-        pass
-    
+        narra = numpy.array(self.Matrix)
+        print(narra)
+        x,y = 1,20
+        print("STARTING")
+        button = tk.Button(self, text="G", width=1, height=1, bg="green")
+        button._coords = x,y
+        button.grid(row=x, column=y)
+        print(self.Matrix)
+        
+        while(input("Entrada") != 0):
+            xm1, ym1 = x, y
+            x,y = x, y-1
+            self.display_image(x,y)
+            
+            if(xm1 == x and ym1 > y):
+                for i in range(3):
+                    x_reset = xm1+i
+                    cor = self.matrizBase[x_reset][ym1+3]
+                    print("Valor da cor ",cor) 
+                    if(cor == 0):
+                        button = tk.Button(self, text="", width=1, height=1)
+                        button._coords = x_reset,ym1
+                        button.grid(row=x_reset, column=ym1)
+                    elif(cor in (2,3,4,5)):
+                        button = tk.Button(self, text="", width=1, height=1)
+                        button._coords = x_reset,ym1
+                        button.grid(row=x_reset, column=ym1)
+                    elif(cor == 6):
+                        button = tk.Button(self, text="", width=1, height=1,bg="blue")
+                        button._coords = x_reset,ym1
+                        button.grid(row=x_reset, column=ym1)
+            elif(xm1 == x and ym1 < y):
+                for i in range(3):
+                    x_reset = xm1+i
+                    cor = self.matrizBase[x_reset][ym1]
+                    print("Valor da cor ",cor) 
+                    if(cor == 0):
+                        button = tk.Button(self, text="", width=1, height=1)
+                        button._coords = x_reset,ym1
+                        button.grid(row=x_reset, column=ym1)
+                    elif(cor in (2,3,4,5)):
+                        button = tk.Button(self, text="", width=1, height=1)
+                        button._coords = x_reset,ym1
+                        button.grid(row=x_reset, column=ym1)
+                    elif(cor == 6):
+                        button = tk.Button(self, text="", width=1, height=1,bg="blue")
+                        button._coords = x_reset,ym1
+                        button.grid(row=x_reset, column=ym1)
+        
+
     def display_image(self, x, y):
         load = Image.open("robot.jpg")
         load = load.rotate(90)
@@ -80,6 +129,8 @@ class App(tk.Tk):
         img = tk.Label(self, image=render)
         img.image = render
         img.grid(row=x, column=y, rowspan=3, columnspan=3)
+    
+
 
     
     def display_grid(self):
@@ -104,15 +155,18 @@ class App(tk.Tk):
     
     def display_grid_second_part(self):
         self.Matrix = [[0 for x in range(self.w)] for y in range(self.h)]
+
+        x ,y = 1,20
         
-        for j in range(3):
-            if(j==2):
-                self.Matrix[1][3] = 2
-                self.Matrix[2][3] = 3
-                self.Matrix[3][3] = 4
+        for j in range(y,y+3):
+            if(j==y+2):
+                self.Matrix[x][y+2] = 2
+                self.Matrix[x+1][y+2] = 3
+                self.Matrix[x+2][y+2] = 4
             else:
-                for i in range(3):
-                    self.Matrix[1+i][1+j]=5
+                for i in range(x,x+3):
+                    self.Matrix[x+i][y+j]=5
+        self.display_image(x,y)
 
         objects = []
         for i in range(3):
@@ -135,7 +189,8 @@ class App(tk.Tk):
                 button._coords = x, y
                 button.grid(row=x, column=y)
                 
-        self.display_image(1,1)
+        self.matrizBase = self.Matrix
+        self.on_start_button()
 
 if __name__ == '__main__':
     App().mainloop()
