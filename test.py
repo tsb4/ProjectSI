@@ -14,8 +14,8 @@ class App(tk.Tk):
         self.Matrix[1][0] = 3
         self.Matrix[2][0] = 4 
         #self.butto
-        self.display_grid()
-        #self.display_grid_second_part()
+        #self.display_grid()
+        self.display_grid_second_part()
 
     def on_button_1_click(self, event):
         print('on_button_1_click:{}'.format(event.widget._coords))
@@ -116,9 +116,7 @@ class App(tk.Tk):
                     button = tk.Button(self, text="", width=1, height=1, bg="peru")   
                 button._coords = x, y
                 button.grid(row=x, column=y)
-                button.bind("<Button-1>", self.on_button_1_click)
-                button.bind("<Button-3>", self.on_button_2_click)
-
+                
         self.display_image(1,1)
 
 if __name__ == '__main__':
