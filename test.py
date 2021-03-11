@@ -371,11 +371,11 @@ class App(tk.Tk):
             if(self.sensor_central()==7):
                 print("CHEGOU!!!!!")
                 #r=0
-                labelRegra = tk.Label(self, text='Regra 1: O linha de chegada!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
+                self.labelRegra.configure(text='Regra 1: O linha de chegada!')# = tk.Label(self, , borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 self.display_grid_second_part()
             elif((self.looking_forward_obs()==6 or self.looking_left_obs()==6 or self.looking_right_obs()==6) and self.desviando==2):
                 #r=1
-                labelRegra = tk.Label(self, text='Regra 2: Contornando o comprimento do obstaculo...', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
+                self.labelRegra.configure(text='Regra 2: Contornando o comprimento do obstaculo...')#tk.Label(self, text='Regra 2: Contornando o comprimento do obstaculo...', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 print("contornando")
                 self.turn_right()
                 self.move_forward()
@@ -383,7 +383,7 @@ class App(tk.Tk):
                 self.desviando=2
             elif((self.looking_forward_obs()==6 or self.looking_left_obs()==6 or self.looking_right_obs()==6)):
                 #r=2
-                labelRegra = tk.Label(self, text='Regra 3: Contornando a largura do obstaculo...', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
+                self.labelRegra.configure(text='Regra 3: Contornando a largura do obstaculo...')#text='Regra 3: Contornando a largura do obstaculo...', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 print("obstacle")
                 self.turn_right()
                 self.move_forward()
@@ -391,41 +391,41 @@ class App(tk.Tk):
                 self.desviando = 1
             elif(self.sensor_central()==1 and self.sensor_left()==0 and self.sensor_right()==0):
                 #r=3
-                labelRegra = tk.Label(self, text='Regra 4: Sensores laterais livres, seguir em frente!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
+                self.labelRegra.configure(text='Regra 4: Sensores laterais livres, seguir em frente!')# text='Regra 4: Sensores laterais livres, seguir em frente!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 self.move_forward()
             elif(self.sensor_central()==1 and self.sensor_left()==1 and self.sensor_right()==0):
                 #r=4
-                labelRegra = tk.Label(self, text='Regra 5: Sinal captado no sensor esquerdo, virar a esquerda!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
+                self.labelRegra.configure(text='Regra 5: Sinal captado no sensor esquerdo, virar a esquerda!')#='Regra 5: Sinal captado no sensor esquerdo, virar a esquerda!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 self.move_forward()
                 self.turn_left()
             elif(self.sensor_central()==1 and self.sensor_left()==0 and self.sensor_right()==1):
                #r=5
-                labelRegra = tk.Label(self, text='Regra 6: Sinal captado no sensor direito, virar a direita!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
+                self.labelRegra.configure(text='Regra 6: Sinal captado no sensor direito, virar a direita!')#t='Regra 6: Sinal captado no sensor direito, virar a direita!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 self.move_forward()
                 self.turn_right()
             elif((self.sensor_central()==1 and self.sensor_left()==1 and self.sensor_right()==1) and self.desviando==2):
                 #r=6
-                labelRegra = tk.Label(self, text='Regra 7: Linha reencontrada! Centralizando...', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
+                self.labelRegra.configure(text='Regra 7: Linha reencontrada! Centralizando...')#='Regra 7: Linha reencontrada! Centralizando...', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 self.move_forward()
                 self.turn_right()
                 self.desviando=0
             elif(self.sensor_central()==1 and self.sensor_left()==1 and self.sensor_right()==1):
                 #r=7
-                labelRegra = tk.Label(self, text='Regra 8: Encruzilhada encontrada, seguir em frente!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
+                self.labelRegra.configure(text='Regra 8: Encruzilhada encontrada, seguir em frente!')#'Regra 8: Encruzilhada encontrada, seguir em frente!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 self.move_forward()
             elif(self.desviando==1):
                 #r=8
-                labelRegra = tk.Label(self, text='Regra 9: Checagem de largura completa. Hora de checar o comprimento!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
+                self.labelRegra.configure(text='Regra 9: Checagem de largura completa. Hora de checar o comprimento!')#text='Regra 9: Checagem de largura completa. Hora de checar o comprimento!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 self.desviando=2
                 self.move_forward()
                 self.turn_left()
             else:
                 #r=9
-                labelRegra = tk.Label(self, text='Regra 10: Na duvida, siga em frente!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
+                self.labelRegra.configure(text='Regra 10: Na duvida, siga em frente!')#text='Regra 10: Na duvida, siga em frente!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 self.move_forward()
             
             #labelRegra = tk.Label(self, text='Regra %s'%(r), borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
-    
+            self.labelRegra.grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
           
 
             #if(com=='f'):
@@ -440,6 +440,7 @@ class App(tk.Tk):
 
     def on_start_button_first_part(self, event):
         self.matrizBase = list(map(list, self.Matrix))
+        self.labelRegra=tk.Label(self, text='', borderwidth=1)
         self.start_first_part()
 
     def start_second_part(self):
