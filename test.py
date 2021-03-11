@@ -281,15 +281,40 @@ class App(tk.Tk):
             else:
                pass
 
+    def looking_forward(self):
+        if(self.robot_dir == 0): #UP
+            return self.Matrix[self.robot_x-3][self.robot_y+1]
+        
+        if(self.robot_dir == 1): #RIGHT
+            print(self.Matrix[self.robot_x+3][self.robot_y+1])
+            return self.Matrix[self.robot_x+3][self.robot_y+1]
+    
+        if(self.robot_dir == 2): #DOWN
+            return self.Matrix[self.robot_x+1][self.robot_y+3]
+        
+        if(self.robot_dir == 3): #LEFT
+            return self.Matrix[self.robot_x+3][self.robot_y+1]
+    
+    def looking_right(self):
+        pass
+
+    def looking_left(self):
+        pass
+
     def on_start_button_first_part(self, event):
         self.start_first_part()
 
     def start_second_part(self):
-        if(True):
-            self.after(1000, self.start_second_part)
-          
-            com ='f'
+        while(True):
+            #self.after(1000, self.start_second_part)
+            
+            if(self.looking_forward() == 7):
+                print("OBJETO")
+            if(self.looking_forward() == 6):
+                print("PAREDE")
 
+
+            com = input("ENTRADA") 
             if(com=='f'):
                 self.move_forward()
             elif(com=='x'):
@@ -400,7 +425,7 @@ class App(tk.Tk):
         buttonStart.bind("<Button-1>", self.on_start_button_first_part)
         #buttonStart.grid(row=int(self.h/2), column=int(self.w)+1, columnspan=10)
         buttonStart.place(x=1200, y=520)
-        self.display_image(0, 0)
+        self.display_image(0, 0,90)
       
 
     #Esta função inicia a segunda parte de identificações que o robo irá fazer
