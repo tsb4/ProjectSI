@@ -439,6 +439,8 @@ class App(tk.Tk):
           
             com ='x'
 
+
+            com = input("ENTRADA") 
             if(com=='f'):
                 self.move_forward()
             elif(com=='x'):
