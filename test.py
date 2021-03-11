@@ -264,41 +264,13 @@ class App(tk.Tk):
     #Edsquerda - a
     #Baixo - s
 
-    def on_start_button_second_part(self,x_atual,y_atual):
 
-        while(True):
-            #x_anterior, y_anterior = x_atual, y_atual
+    def start_first_part(self):
+        if(True):
+            self.after(1000, self.start_first_part)
+          
+            com ='f'
 
-            #Esse trecho ajuda a entender a Matrix a cada interação
-            #narra = numpy.array(self.Matrix)
-            #print(narra)
-
-            
-            com = input("Comando:  ")
-            #Esse trecho ajuda a testar o codigo, a cada interação é passado o parametro de X e Y pelo terminal indicando as direções que o robo irá seguir
-            #print("[",x_anterior," | ", y_anterior,"]")
-            #x_atual = int(input("Valor de x "))
-            #y_atual = int(input("Valor de y "))
-            #print("Novo ","[",x_atual," | ", y_atual,"]")
-
-            
-            #ROBO INDO PARA A ESQUERDA
-            #if(com=='a'):
-            #    print("AQUI")
-            #    self.move_left()
-            #
-            #    
-            ##ROBO INDO PARA A DIREITA
-            #elif(com=='d'):
-            #    self.move_right()
-            #    
-            ##ROBO INDO PARA CIMA
-            #elif(com=='w'):
-            #    self.move_up()
-            #
-            ##ROBO INDO PARA BAIXO
-            #elif(com=='s'):
-            #    self.move_down()
             if(com=='f'):
                 self.move_forward()
             elif(com=='x'):
@@ -308,6 +280,30 @@ class App(tk.Tk):
                 
             else:
                pass
+
+    def on_start_button_first_part(self, event):
+        self.start_first_part()
+
+    def start_second_part(self):
+        if(True):
+            self.after(1000, self.start_second_part)
+          
+            com ='f'
+
+            if(com=='f'):
+                self.move_forward()
+            elif(com=='x'):
+                self.turn_right()
+            elif(com=='z'):
+                self.turn_left()
+                
+            else:
+               pass
+
+    def on_start_button_second_part(self, event):
+        self.start_second_part()
+
+        
                 
 
     #Função que coloca a cor desejada no indice da matriz (x,y) escolhidos
@@ -401,7 +397,7 @@ class App(tk.Tk):
                 button.bind("<Button-1>", self.on_button_1_click)
                 button.bind("<Button-3>", self.on_button_2_click)
         buttonStart = tk.Button(self, text="START", width=10, height=1)
-        buttonStart.bind("<Button-1>", self.on_start_button)
+        buttonStart.bind("<Button-1>", self.on_start_button_first_part)
         #buttonStart.grid(row=int(self.h/2), column=int(self.w)+1, columnspan=10)
         buttonStart.place(x=1200, y=520)
         self.display_image(0, 0)
@@ -414,7 +410,7 @@ class App(tk.Tk):
     #   do robo possui 5 como valor, e todos em vermelho
     def display_grid_second_part(self):
         self.Matrix = [[0 for x in range(self.w)] for y in range(self.h)]
-        x_ini ,y_ini = 10,1
+        x_ini ,y_ini = 1,1
         self.robot_x, self.robot_y, self.robot_dir = x_ini, y_ini, 1
 
         objects = []
@@ -441,7 +437,12 @@ class App(tk.Tk):
         self.create_matriz_image(x_ini,y_ini,"right")
         self.display_image(x_ini,y_ini,90)
         self.matrizBase = self.Matrix
-        self.on_start_button_second_part(x_ini,y_ini)
+        
+        #self.on_start_button_second_part(x_ini,y_ini)
+        buttonStart = tk.Button(self, text="START", width=10, height=1)
+        buttonStart.bind("<Button-1>", self.on_start_button_second_part)
+        buttonStart.grid(row=int(self.h)+1, column=int(self.w/2)-5, columnspan=10)
+        #buttonStart.place(x=1200, y=520)
 
 if __name__ == '__main__':
     App().mainloop()
