@@ -225,7 +225,7 @@ class App(tk.Tk):
             self.robot_dir = 3
         elif(self.robot_dir==3):
             self.create_matriz_image(x_atual,y_atual,"up")
-            self.display_image(x_atual,y_atual,1800)
+            self.display_image(x_atual,y_atual,180)
             self.robot_dir = 0
     
     def turn_left(self):
@@ -244,7 +244,7 @@ class App(tk.Tk):
             self.robot_dir = 3
         elif(self.robot_dir==1):
             self.create_matriz_image(x_atual,y_atual,"up")
-            self.display_image(x_atual,y_atual,1800)
+            self.display_image(x_atual,y_atual,180)
             self.robot_dir = 0
 
 
@@ -283,35 +283,88 @@ class App(tk.Tk):
 
     def looking_forward(self):
         if(self.robot_dir == 0): #UP
-            return self.Matrix[self.robot_x-3][self.robot_y+1]
+            #print(self.Matrix[self.robot_x-1][self.robot_y+1])
+            return self.Matrix[self.robot_x-1][self.robot_y+1]
         
         if(self.robot_dir == 1): #RIGHT
-            print(self.Matrix[self.robot_x+3][self.robot_y+1])
-            return self.Matrix[self.robot_x+3][self.robot_y+1]
+            #print(self.Matrix[self.robot_x+1][self.robot_y+3])
+            return self.Matrix[self.robot_x+1][self.robot_y+3]
     
         if(self.robot_dir == 2): #DOWN
-            return self.Matrix[self.robot_x+1][self.robot_y+3]
+            #print (self.Matrix[self.robot_x+3][self.robot_y+1])
+            return self.Matrix[self.robot_x+3][self.robot_y+1]
         
         if(self.robot_dir == 3): #LEFT
-            return self.Matrix[self.robot_x+3][self.robot_y+1]
+            #print (self.Matrix[self.robot_x+1][self.robot_y-1])
+            return self.Matrix[self.robot_x+1][self.robot_y-1]
     
     def looking_right(self):
-        pass
+        if(self.robot_dir == 0): #UP
+            #print(self.Matrix[self.robot_x-1][self.robot_y+2])
+            return self.Matrix[self.robot_x-1][self.robot_y+2]
+        
+        if(self.robot_dir == 1): #RIGHT
+            #print(self.Matrix[self.robot_x+2][self.robot_y+3])
+            return self.Matrix[self.robot_x+2][self.robot_y+3]
+    
+        if(self.robot_dir == 2): #DOWN
+            #print (self.Matrix[self.robot_x+3][self.robot_y])
+            return self.Matrix[self.robot_x+3][self.robot_y]
+        
+        if(self.robot_dir == 3): #LEFT
+            #print (self.Matrix[self.robot_x][self.robot_y-1])
+            return self.Matrix[self.robot_x][self.robot_y-1]
 
     def looking_left(self):
-        pass
+        if(self.robot_dir == 0): #UP
+            print(self.Matrix[self.robot_x-1][self.robot_y])
+            return self.Matrix[self.robot_x-1][self.robot_y]
+        
+        if(self.robot_dir == 1): #RIGHT
+            print(self.Matrix[self.robot_x][self.robot_y+3])
+            return self.Matrix[self.robot_x][self.robot_y+3]
+    
+        if(self.robot_dir == 2): #DOWN
+            print (self.Matrix[self.robot_x+3][self.robot_y+2])
+            return self.Matrix[self.robot_x+3][self.robot_y+2]
+        
+        if(self.robot_dir == 3): #LEFT
+            print (self.Matrix[self.robot_x+2][self.robot_y-1])
+            return self.Matrix[self.robot_x+2][self.robot_y-1]
+
+    def desvia_parede(self):
+        if(self.robot_dir == 0): #UP
+            self.robot_dir = 1
+
+        if(self.robot_dir == 1): #RIGHT
+            self.turn_right()
+            for i in range(3):
+                self.after(1000)
+                if(self.looking_left() == self.looking_right() == self.looking_forward() == 6):
+                    self.turn_right()
+                    self.turn_right()
+                else:
+                    self.move_forward()
+
+        if(self.robot_dir == 2): #DOWN
+            self.robot_dir = 2
+
+        if(self.robot_dir == 3): #LEFT
+            self.robot_dir = 0
+        return
 
     def on_start_button_first_part(self, event):
         self.start_first_part()
 
+    #Função que inicia a parte 2
     def start_second_part(self):
         while(True):
             #self.after(1000, self.start_second_part)
-            
+            if(self.looking_left() == self.looking_right() == self.looking_forward() == 6):
+                print("PAREDE")
+                self.desvia_parede()
             if(self.looking_forward() == 7):
                 print("OBJETO")
-            if(self.looking_forward() == 6):
-                print("PAREDE")
 
 
             com = input("ENTRADA") 
