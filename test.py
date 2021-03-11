@@ -295,9 +295,54 @@ class App(tk.Tk):
             sensor_x=self.robot_x
             sensor_y = self.robot_y
         return self.matrizBase[sensor_x][sensor_y]
+    
+    def looking_forward_obs(self):
+        wall_x, wall_y = 0, 0
+        if(self.robot_dir==0): #UP
+            wall_x=self.robot_x-1
+            wall_y = self.robot_y+1
+        if(self.robot_dir==1): #RIGHT
+            wall_x = self.robot_x+1
+            wall_y = self.robot_y+3
+        if(self.robot_dir==2): #DOWN
+            wall_x=self.robot_x+3
+            wall_y = self.robot_y+1
+        if(self.robot_dir==3): #LEFT
+            wall_x=self.robot_x+1
+            wall_y = self.robot_y-1
+        return self.matrizBase[wall_x][wall_y]
 
+    def looking_left_obs(self):
+        wall_x, wall_y = 0, 0
+        if(self.robot_dir==0): #UP
+            wall_x=self.robot_x-1
+            wall_y = self.robot_y
+        if(self.robot_dir==1): #RIGHT
+            wall_x = self.robot_x
+            wall_y = self.robot_y+3
+        if(self.robot_dir==2): #DOWN
+            wall_x=self.robot_x+3
+            wall_y = self.robot_y+2
+        if(self.robot_dir==3): #LEFT
+            wall_x=self.robot_x+2
+            wall_y = self.robot_y-1
+        return self.matrizBase[wall_x][wall_y]
 
-
+    def looking_right_obs(self):
+        wall_x, wall_y = 0, 0
+        if(self.robot_dir==0): #UP
+            wall_x=self.robot_x-1
+            wall_y = self.robot_y+2
+        if(self.robot_dir==1): #RIGHT
+            wall_x = self.robot_x+2
+            wall_y = self.robot_y+3
+        if(self.robot_dir==2): #DOWN
+            wall_x=self.robot_x+3
+            wall_y = self.robot_y
+        if(self.robot_dir==3): #LEFT
+            wall_x=self.robot_x
+            wall_y = self.robot_y-1
+        return self.matrizBase[wall_x][wall_y]
                 
                    
 
@@ -316,18 +361,25 @@ class App(tk.Tk):
 
     def start_first_part(self):
         if(True):
-            self.after(1000, self.start_first_part)
+            self.after(2000, self.start_first_part)
             #print(self.sensor_central(), self.sensor_left(), self.sensor_right())
+            #print(self.looking_forward_obs())
             #print(np.array(self.matrizBase))
-            if(self.sensor_central()==1 and self.sensor_left()==0 and self.sensor_right()==0):
-                self.move_forward()
-            if(self.sensor_central()==1 and self.sensor_left()==1 and self.sensor_right()==0):
+            #print(np.array(self.Matrix))
+            if(self.looking_forward_obs()==6 or self.looking_left_obs()==6 or self.looking_right_obs()==6):
+                print("obstacle")
+                self.turn_right()
                 self.move_forward()
                 self.turn_left()
-            if(self.sensor_central()==1 and self.sensor_left()==0 and self.sensor_right()==1):
+            elif(self.sensor_central()==1 and self.sensor_left()==0 and self.sensor_right()==0):
+                self.move_forward()
+            elif(self.sensor_central()==1 and self.sensor_left()==1 and self.sensor_right()==0):
+                self.move_forward()
+                self.turn_left()
+            elif(self.sensor_central()==1 and self.sensor_left()==0 and self.sensor_right()==1):
                 self.move_forward()
                 self.turn_right()
-            if(self.sensor_central()==1 and self.sensor_left()==1 and self.sensor_right()==1):
+            elif(self.sensor_central()==1 and self.sensor_left()==1 and self.sensor_right()==1):
                 self.move_forward()
             else:
                 self.move_forward()
