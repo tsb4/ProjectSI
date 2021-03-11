@@ -1,4 +1,3 @@
-
 from PIL import Image, ImageTk
 import tkinter as tk
 import random
@@ -23,7 +22,7 @@ from copy import copy, deepcopy
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.w, self.h = 30, 30
+        self.w, self.h = 20, 20
         self.Matrix = [[0 for x in range(self.w)] for y in range(self.h)]
         self.matrizBase = self.Matrix
         self.robot_x, self.robot_y, self.robot_dir = 0, 0, 0
@@ -363,59 +362,69 @@ class App(tk.Tk):
 
     def start_first_part(self):
         if(self.firstPart):
-            r = 0
-            self.after(2000, self.start_first_part)
+           # r = 0
+            self.after(1000, self.start_first_part)
             #print(self.sensor_central(), self.sensor_left(), self.sensor_right())
             #print(self.looking_forward_obs())
             #print(np.array(self.matrizBase))
             #print(np.array(self.Matrix))
             if(self.sensor_central()==7):
                 print("CHEGOU!!!!!")
-                r=0
+                #r=0
+                labelRegra = tk.Label(self, text='Regra 1: O linha de chegada!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 self.display_grid_second_part()
             elif((self.looking_forward_obs()==6 or self.looking_left_obs()==6 or self.looking_right_obs()==6) and self.desviando==2):
-                r=1
+                #r=1
+                labelRegra = tk.Label(self, text='Regra 2: Contornando o comprimento do obstaculo...', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 print("contornando")
                 self.turn_right()
                 self.move_forward()
                 self.turn_left()
                 self.desviando=2
             elif((self.looking_forward_obs()==6 or self.looking_left_obs()==6 or self.looking_right_obs()==6)):
-                r=2
+                #r=2
+                labelRegra = tk.Label(self, text='Regra 3: Contornando a largura do obstaculo...', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 print("obstacle")
                 self.turn_right()
                 self.move_forward()
                 self.turn_left()
                 self.desviando = 1
             elif(self.sensor_central()==1 and self.sensor_left()==0 and self.sensor_right()==0):
-                r=3
+                #r=3
+                labelRegra = tk.Label(self, text='Regra 4: Sensores laterais livres, seguir em frente!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 self.move_forward()
             elif(self.sensor_central()==1 and self.sensor_left()==1 and self.sensor_right()==0):
-                r=4
+                #r=4
+                labelRegra = tk.Label(self, text='Regra 5: Sinal captado no sensor esquerdo, virar a esquerda!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 self.move_forward()
                 self.turn_left()
             elif(self.sensor_central()==1 and self.sensor_left()==0 and self.sensor_right()==1):
-                r=5
+               #r=5
+                labelRegra = tk.Label(self, text='Regra 6: Sinal captado no sensor direito, virar a direita!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 self.move_forward()
                 self.turn_right()
             elif((self.sensor_central()==1 and self.sensor_left()==1 and self.sensor_right()==1) and self.desviando==2):
-                r=6
+                #r=6
+                labelRegra = tk.Label(self, text='Regra 7: Linha reencontrada! Centralizando...', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 self.move_forward()
                 self.turn_right()
                 self.desviando=0
             elif(self.sensor_central()==1 and self.sensor_left()==1 and self.sensor_right()==1):
-                r=7
+                #r=7
+                labelRegra = tk.Label(self, text='Regra 8: Encruzilhada encontrada, seguir em frente!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 self.move_forward()
             elif(self.desviando==1):
-                r=8
+                #r=8
+                labelRegra = tk.Label(self, text='Regra 9: Checagem de largura completa. Hora de checar o comprimento!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 self.desviando=2
                 self.move_forward()
                 self.turn_left()
             else:
-                r=9
+                #r=9
+                labelRegra = tk.Label(self, text='Regra 10: Na duvida, siga em frente!', borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
                 self.move_forward()
             
-            labelRegra = tk.Label(self, text='Regra %s'%(r), borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
+            #labelRegra = tk.Label(self, text='Regra %s'%(r), borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
     
           
 
@@ -429,40 +438,16 @@ class App(tk.Tk):
             #else:
             #   pass
 
-    def desvia_parede(self):
-        if(self.robot_dir == 0): #UP
-            self.robot_dir = 1
-
-        if(self.robot_dir == 1): #RIGHT
-            self.turn_right()
-            for i in range(3):
-                self.after(1000)
-                if(self.looking_left() == self.looking_right() == self.looking_forward() == 6):
-                    self.turn_right()
-                    self.turn_right()
-                else:
-                    self.move_forward()
-
-        if(self.robot_dir == 2): #DOWN
-            self.robot_dir = 2
-
-        if(self.robot_dir == 3): #LEFT
-            self.robot_dir = 0
-        return
-
     def on_start_button_first_part(self, event):
         self.matrizBase = list(map(list, self.Matrix))
         self.start_first_part()
 
-    #Função que inicia a parte 2
     def start_second_part(self):
         if(not self.firstPart):
             self.after(1000, self.start_second_part)
           
             com ='x'
 
-
-            com = input("ENTRADA") 
             if(com=='f'):
                 self.move_forward()
             elif(com=='x'):
