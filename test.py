@@ -3,7 +3,8 @@ from PIL import Image, ImageTk
 import tkinter as tk
 import random
 import time
-import numpy
+import numpy as np
+from copy import copy, deepcopy
 
 ##Convencoes Importantes
 ##Matriz
@@ -34,8 +35,8 @@ class App(tk.Tk):
             else:
                 for i in range(3):
                     self.Matrix[i][j]=5
-        #self.display_grid()
-        self.display_grid_second_part()
+        self.display_grid()
+        #self.display_grid_second_part()
 
     def on_button_1_click(self, event):
         print('on_button_1_click:{}'.format(event.widget._coords))
@@ -225,7 +226,7 @@ class App(tk.Tk):
             self.robot_dir = 3
         elif(self.robot_dir==3):
             self.create_matriz_image(x_atual,y_atual,"up")
-            self.display_image(x_atual,y_atual,1800)
+            self.display_image(x_atual,y_atual,180)
             self.robot_dir = 0
     
     def turn_left(self):
@@ -244,8 +245,56 @@ class App(tk.Tk):
             self.robot_dir = 3
         elif(self.robot_dir==1):
             self.create_matriz_image(x_atual,y_atual,"up")
-            self.display_image(x_atual,y_atual,1800)
+            self.display_image(x_atual,y_atual,180)
             self.robot_dir = 0
+    
+    def sensor_left(self):
+        sensor_x, sensor_y = 0, 0
+        if(self.robot_dir==0): #UP
+            sensor_x=self.robot_x
+            sensor_y = self.robot_y
+        if(self.robot_dir==1): #RIGHT
+            sensor_x = self.robot_x
+            sensor_y = self.robot_y+2
+        if(self.robot_dir==2): #DOWN
+            sensor_x=self.robot_x+2
+            sensor_y = self.robot_y+2
+        if(self.robot_dir==3): #LEFT
+            sensor_x=self.robot_x+2
+            sensor_y = self.robot_y
+        return self.matrizBase[sensor_x][sensor_y]
+    
+    def sensor_central(self):
+        sensor_x, sensor_y = 0, 0
+        if(self.robot_dir==0): #UP
+            sensor_x=self.robot_x
+            sensor_y = self.robot_y+1
+        if(self.robot_dir==1): #RIGHT
+            sensor_x = self.robot_x+1
+            sensor_y = self.robot_y+2
+        if(self.robot_dir==2): #DOWN
+            sensor_x=self.robot_x+2
+            sensor_y = self.robot_y+1
+        if(self.robot_dir==3): #LEFT
+            sensor_x=self.robot_x+1
+            sensor_y = self.robot_y
+        return self.matrizBase[sensor_x][sensor_y]
+
+    def sensor_right(self):
+        sensor_x, sensor_y = 0, 0
+        if(self.robot_dir==0): #UP
+            sensor_x=self.robot_x
+            sensor_y = self.robot_y+2
+        if(self.robot_dir==1): #RIGHT
+            sensor_x = self.robot_x+2
+            sensor_y = self.robot_y+2
+        if(self.robot_dir==2): #DOWN
+            sensor_x=self.robot_x+2
+            sensor_y = self.robot_y
+        if(self.robot_dir==3): #LEFT
+            sensor_x=self.robot_x
+            sensor_y = self.robot_y
+        return self.matrizBase[sensor_x][sensor_y]
 
 
 
@@ -268,20 +317,35 @@ class App(tk.Tk):
     def start_first_part(self):
         if(True):
             self.after(1000, self.start_first_part)
-          
-            com ='f'
-
-            if(com=='f'):
+            #print(self.sensor_central(), self.sensor_left(), self.sensor_right())
+            #print(np.array(self.matrizBase))
+            if(self.sensor_central()==1 and self.sensor_left()==0 and self.sensor_right()==0):
                 self.move_forward()
-            elif(com=='x'):
-                self.turn_right()
-            elif(com=='z'):
+            if(self.sensor_central()==1 and self.sensor_left()==1 and self.sensor_right()==0):
+                self.move_forward()
                 self.turn_left()
-                
+            if(self.sensor_central()==1 and self.sensor_left()==0 and self.sensor_right()==1):
+                self.move_forward()
+                self.turn_right()
+            if(self.sensor_central()==1 and self.sensor_left()==1 and self.sensor_right()==1):
+                self.move_forward()
             else:
-               pass
+                self.move_forward()
+    
+          
+
+            #if(com=='f'):
+            #    self.move_forward()
+            #elif(com=='x'):
+            #    self.turn_right()
+            #elif(com=='z'):
+            #    self.turn_left()
+            #    
+            #else:
+            #   pass
 
     def on_start_button_first_part(self, event):
+        self.matrizBase = list(map(list, self.Matrix))
         self.start_first_part()
 
     def start_second_part(self):
@@ -385,6 +449,10 @@ class App(tk.Tk):
 
 
     def display_grid(self):
+        #print("caaaaa")
+        self.Matrix = [[0 for x in range(self.w)] for y in range(self.h)]
+        x_ini ,y_ini = 1,1
+        self.robot_x, self.robot_y, self.robot_dir = x_ini, y_ini, 1
         for x in range(self.h):
             for y in range(self.w):
                 if(self.Matrix[x][y]==2 or self.Matrix[x][y]==3 or self.Matrix[x][y]==4 or self.Matrix[x][y]==5):
@@ -398,10 +466,11 @@ class App(tk.Tk):
                 button.bind("<Button-3>", self.on_button_2_click)
         buttonStart = tk.Button(self, text="START", width=10, height=1)
         buttonStart.bind("<Button-1>", self.on_start_button_first_part)
-        #buttonStart.grid(row=int(self.h/2), column=int(self.w)+1, columnspan=10)
-        buttonStart.place(x=1200, y=520)
-        self.display_image(0, 0)
-      
+        buttonStart.grid(row=int(self.h)+1, column=int(self.w/2)-5, columnspan=10)
+        #buttonStart.place(x=1200, y=520)
+        self.create_matriz_image(x_ini,y_ini,"right")
+        self.display_image(x_ini,y_ini,90)
+        #self.matrizBase = self.Matrix.copy()
 
     #Esta função inicia a segunda parte de identificações que o robo irá fazer
     #Nesta parte não tem linhas, apenas as paredes (em azul com valor de 6), e os objetos a serem coletados (em bege no valor de 7)
