@@ -23,7 +23,7 @@ from copy import copy, deepcopy
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.w, self.h = 30, 30
+        self.w, self.h = 15, 15
         self.Matrix = [[0 for x in range(self.w)] for y in range(self.h)]
         self.matrizBase = self.Matrix
         self.robot_x, self.robot_y, self.robot_dir = 0, 0, 0
@@ -477,11 +477,23 @@ class App(tk.Tk):
     #Função que inicia a parte 2
     def start_second_part(self):
         if(not self.firstPart):
-            self.after(1000, self.start_second_part)
-            if(self.looking_left() == 6 and self.looking_right() == 6 and self.looking_forward() == 6):
+            self.after(500, self.start_second_part)
+            if(self.looking_left_obs() == 6 or self.looking_right_obs() == 6 or self.looking_forward_obs() == 6):
                 print("PAREDE")
+                choice = random.random()
+                if(choice<=0.5):
+                    self.turn_right()
+                else:
+                    self.turn_left()
+            elif(self.looking_left_obs()==7):
+                self.turn_left()
+                self.move_forward()
                 self.turn_right()
-            elif(self.looking_forward() == 7):
+            elif(self.looking_right_obs()==7):
+                self.turn_right()
+                self.move_forward()
+                self.turn_left()
+            elif(self.looking_forward_obs() == 7):
                 self.move_forward()
                 self.numberOfOjects += 1
                 print("OBJETO")
@@ -609,6 +621,12 @@ class App(tk.Tk):
         self.Matrix = [[0 for x in range(self.w)] for y in range(self.h)]
         x_ini ,y_ini = 1,1
         self.robot_x, self.robot_y, self.robot_dir = x_ini, y_ini, 1
+        obstacles = []
+        for i in range(10):
+            x=random.randint(1, self.h-2)
+            y=random.randint(1, self.w-2)
+            obstacles.append((x,y)) 
+            self.Matrix[x][y] = 6
 
         objects = []
         for i in range(3):
@@ -623,6 +641,8 @@ class App(tk.Tk):
                 button = tk.Button(self, text="", width=1, height=1)
                 if(x==0 or y==0 or x==self.h-1 or y ==self.w-1):
                     self.Matrix[x][y] = 6
+                    button = tk.Button(self, text="", width=1, height=1, bg="blue")
+                elif(self.Matrix[x][y]==6):
                     button = tk.Button(self, text="", width=1, height=1, bg="blue")
                 #elif(self.Matrix[x][y]==4 or self.Matrix[x][y]==3 or self.Matrix[x][y]==2 or self.Matrix[x][y]==5):
                 #    button = tk.Button(self, text="", width=1, height=1, bg="red")
