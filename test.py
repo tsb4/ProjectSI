@@ -35,6 +35,8 @@ class App(tk.Tk):
             else:
                 for i in range(3):
                     self.Matrix[i][j]=5
+        self.desviando = 0
+        self.firstPart = True
         self.display_grid()
         #self.display_grid_second_part()
 
@@ -360,17 +362,27 @@ class App(tk.Tk):
 
 
     def start_first_part(self):
-        if(True):
+        if(self.firstPart):
             self.after(2000, self.start_first_part)
             #print(self.sensor_central(), self.sensor_left(), self.sensor_right())
             #print(self.looking_forward_obs())
             #print(np.array(self.matrizBase))
             #print(np.array(self.Matrix))
-            if(self.looking_forward_obs()==6 or self.looking_left_obs()==6 or self.looking_right_obs()==6):
+            if(self.sensor_central()==7):
+                print("CHEGOU!!!!!")
+                self.display_grid_second_part()
+            elif((self.looking_forward_obs()==6 or self.looking_left_obs()==6 or self.looking_right_obs()==6) and self.desviando==2):
+                print("contornando")
+                self.turn_right()
+                self.move_forward()
+                self.turn_left()
+                self.desviando=2
+            elif((self.looking_forward_obs()==6 or self.looking_left_obs()==6 or self.looking_right_obs()==6)):
                 print("obstacle")
                 self.turn_right()
                 self.move_forward()
                 self.turn_left()
+                self.desviando = 1
             elif(self.sensor_central()==1 and self.sensor_left()==0 and self.sensor_right()==0):
                 self.move_forward()
             elif(self.sensor_central()==1 and self.sensor_left()==1 and self.sensor_right()==0):
@@ -379,8 +391,16 @@ class App(tk.Tk):
             elif(self.sensor_central()==1 and self.sensor_left()==0 and self.sensor_right()==1):
                 self.move_forward()
                 self.turn_right()
+            elif((self.sensor_central()==1 and self.sensor_left()==1 and self.sensor_right()==1) and self.desviando==2):
+                self.move_forward()
+                self.turn_right()
+                self.desviando=0
             elif(self.sensor_central()==1 and self.sensor_left()==1 and self.sensor_right()==1):
                 self.move_forward()
+            elif(self.desviando==1):
+                self.desviando=2
+                self.move_forward()
+                self.turn_left()
             else:
                 self.move_forward()
     
@@ -401,10 +421,10 @@ class App(tk.Tk):
         self.start_first_part()
 
     def start_second_part(self):
-        if(True):
+        if(not self.firstPart):
             self.after(1000, self.start_second_part)
           
-            com ='f'
+            com ='x'
 
             if(com=='f'):
                 self.move_forward()
@@ -530,6 +550,7 @@ class App(tk.Tk):
     #   talvez nao precisemos desses valores e sim falar que existem apenas dois sensores, um ultrassonico e outro de cor para identificar os objetos), e o restante do corpo
     #   do robo possui 5 como valor, e todos em vermelho
     def display_grid_second_part(self):
+        self.firstPart = False
         self.Matrix = [[0 for x in range(self.w)] for y in range(self.h)]
         x_ini ,y_ini = 1,1
         self.robot_x, self.robot_y, self.robot_dir = x_ini, y_ini, 1
