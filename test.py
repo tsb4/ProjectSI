@@ -363,6 +363,7 @@ class App(tk.Tk):
 
     def start_first_part(self):
         if(self.firstPart):
+            r = 0
             self.after(2000, self.start_first_part)
             #print(self.sensor_central(), self.sensor_left(), self.sensor_right())
             #print(self.looking_forward_obs())
@@ -370,39 +371,51 @@ class App(tk.Tk):
             #print(np.array(self.Matrix))
             if(self.sensor_central()==7):
                 print("CHEGOU!!!!!")
+                r=0
                 self.display_grid_second_part()
             elif((self.looking_forward_obs()==6 or self.looking_left_obs()==6 or self.looking_right_obs()==6) and self.desviando==2):
+                r=1
                 print("contornando")
                 self.turn_right()
                 self.move_forward()
                 self.turn_left()
                 self.desviando=2
             elif((self.looking_forward_obs()==6 or self.looking_left_obs()==6 or self.looking_right_obs()==6)):
+                r=2
                 print("obstacle")
                 self.turn_right()
                 self.move_forward()
                 self.turn_left()
                 self.desviando = 1
             elif(self.sensor_central()==1 and self.sensor_left()==0 and self.sensor_right()==0):
+                r=3
                 self.move_forward()
             elif(self.sensor_central()==1 and self.sensor_left()==1 and self.sensor_right()==0):
+                r=4
                 self.move_forward()
                 self.turn_left()
             elif(self.sensor_central()==1 and self.sensor_left()==0 and self.sensor_right()==1):
+                r=5
                 self.move_forward()
                 self.turn_right()
             elif((self.sensor_central()==1 and self.sensor_left()==1 and self.sensor_right()==1) and self.desviando==2):
+                r=6
                 self.move_forward()
                 self.turn_right()
                 self.desviando=0
             elif(self.sensor_central()==1 and self.sensor_left()==1 and self.sensor_right()==1):
+                r=7
                 self.move_forward()
             elif(self.desviando==1):
+                r=8
                 self.desviando=2
                 self.move_forward()
                 self.turn_left()
             else:
+                r=9
                 self.move_forward()
+            
+            labelRegra = tk.Label(self, text='Regra %s'%(r), borderwidth=1 ).grid(row=int(self.h+2),column=int(self.w/2), columnspan=20)
     
           
 
