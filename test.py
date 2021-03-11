@@ -39,6 +39,9 @@ class App(tk.Tk):
         self.firstPart = True
         self.display_grid()
         #self.display_grid_second_part()
+        #self.display_grid()
+        #self.display_grid_second_part()
+        self.numberOfOjects = 0
 
     def on_button_1_click(self, event):
         print('on_button_1_click:{}'.format(event.widget._coords))
@@ -429,27 +432,44 @@ class App(tk.Tk):
             #else:
             #   pass
 
-    def desvia_parede(self):
-        if(self.robot_dir == 0): #UP
-            self.robot_dir = 1
+    #def looking_right_obs(self):
+    #    wall_x, wall_y = 0, 0
+    #    if(self.robot_dir==0): #UP
+    #        wall_x=self.robot_x-1
+    #        wall_y = self.robot_y+2
+    #    if(self.robot_dir==1): #RIGHT
+    #        wall_x = self.robot_x+2
+    #        wall_y = self.robot_y+3
+    #    if(self.robot_dir==2): #DOWN
+    #        wall_x=self.robot_x+3
+    #        wall_y = self.robot_y
+    #    if(self.robot_dir==3): #LEFT
+    #        wall_x=self.robot_x
+    #        wall_y = self.robot_y-1
+    #    return self.matrizBase[wall_x][wall_y]
+                
 
-        if(self.robot_dir == 1): #RIGHT
-            self.turn_right()
-            for i in range(3):
-                self.after(1000)
-                if(self.looking_left() == self.looking_right() == self.looking_forward() == 6):
-                    self.turn_right()
-                    self.turn_right()
-                else:
-                    self.move_forward()
-
-        if(self.robot_dir == 2): #DOWN
-            self.robot_dir = 2
-
-        if(self.robot_dir == 3): #LEFT
-            self.robot_dir = 0
-        return
-
+    #def desvia_parede(self):
+    #    if(self.robot_dir == 0): #UP
+    #        self.robot_dir = 1
+    #
+    #    if(self.robot_dir == 1): #RIGHT
+    #        self.turn_right()
+    #        for i in range(3):
+    #            self.after(1000)
+    #            if(self.looking_left() == self.looking_right() == self.looking_forward() == 6):
+    #                self.turn_right()
+    #                self.turn_right()
+    #            else:
+    #                self.move_forward()
+    #
+    #    if(self.robot_dir == 2): #DOWN
+    #        self.robot_dir = 2
+    #
+    #    if(self.robot_dir == 3): #LEFT
+    #        self.robot_dir = 0
+    #    return
+    #
     def on_start_button_first_part(self, event):
         self.matrizBase = list(map(list, self.Matrix))
         self.start_first_part()
@@ -458,22 +478,20 @@ class App(tk.Tk):
     def start_second_part(self):
         if(not self.firstPart):
             self.after(1000, self.start_second_part)
-          
-            com ='x'
-
-
-            com = input("ENTRADA") 
-            if(com=='f'):
-                self.move_forward()
-            elif(com=='x'):
+            if(self.looking_left() == 6 and self.looking_right() == 6 and self.looking_forward() == 6):
+                print("PAREDE")
                 self.turn_right()
-            elif(com=='z'):
-                self.turn_left()
-                
+            elif(self.looking_forward() == 7):
+                self.move_forward()
+                self.numberOfOjects += 1
+                print("OBJETO")
             else:
-               pass
+                self.move_forward()
+            
+
 
     def on_start_button_second_part(self, event):
+        self.matrizBase = list(map(list, self.Matrix))
         self.start_second_part()
 
         
