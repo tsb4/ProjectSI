@@ -548,15 +548,19 @@ class App(tk.Tk):
             if(now[0] == 0):
                 self.Objects = self.Objects[1:]
             elif(now[0] < 0):
+                self.labelRegra.configure(text='Regra 4: Objeto em cima. Suba!')
                 while(self.robot_dir != 0):
                     self.turn_left()
             else:
+                self.labelRegra.configure(text='Regra 5: Objeto embaixo. Desça!')
                 while(self.robot_dir != 2):
                     self.turn_left()
         elif(now[1] > 0):
+            self.labelRegra.configure(text='Regra 6: Objeto á direita.Vá a direita!')
             while(self.robot_dir != 1):
                 self.turn_left()
         else:
+            self.labelRegra.configure(text='Regra 7: Objeto á esquerda.Vá a esquerda')
             while(self.robot_dir != 3):
                 self.turn_left()
         return
@@ -568,6 +572,7 @@ class App(tk.Tk):
             self.after(500, self.start_second_part)
             self.move_gmaps()
             if(self.looking_left_obs() == 6 and self.looking_right_obs() == 6 and self.looking_forward_obs() == 6):
+                self.labelRegra.configure(text='Regra 1: Parede delimitadora da arena. Gire aleatoriamente para um lado!')
                 print("PAREDE")
                 choice = random.random()
                 if(choice<=0.5):
@@ -575,18 +580,22 @@ class App(tk.Tk):
                 else:
                     self.turn_left()
             elif(self.looking_left_obs() == 6 or self.looking_right_obs() == 6 or self.looking_forward_obs() == 6):
+                self.labelRegra.configure(text='Regra 2: Pequena Parede. Saia Aleatoriamente.')
                 self.SmallWall = True
             elif(self.looking_left_obs() == 7):
+                self.labelRegra.configure(text='Regra 3: Objeto a Frente. Siga em frente para coletar!')
                 #self.turn_left()
                 #self.move_forward()
                 #self.turn_right()
                 self.matrizBase[self.wall_x][self.wall_y] = 0
             elif(self.looking_right_obs() == 7):
+                self.labelRegra.configure(text='Regra 3: Objeto a Frente. Siga em frente para coletar!')
                 #self.turn_right()
                 #self.move_forward()
                 #self.turn_left()
                 self.matrizBase[self.wall_x][self.wall_y] = 0
             elif(self.looking_forward_obs() == 7):
+                self.labelRegra.configure(text='Regra 3: Objeto a Frente. Siga em frente para coletar!')
                 #self.move_forward()
                 #self.numberOfOjects += 1
                 self.matrizBase[self.wall_x][self.wall_y] = 0
@@ -718,7 +727,7 @@ class App(tk.Tk):
         x_ini ,y_ini = 1,1
         self.robot_x, self.robot_y, self.robot_dir = x_ini, y_ini, 1
         obstacles = []
-        for i in range(5):
+        for i in range(2):
             x=random.randint(4, self.h-5)
             y=random.randint(4, self.w-5)
             obstacles.append((x,y)) 
