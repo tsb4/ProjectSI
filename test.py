@@ -23,10 +23,11 @@ from copy import copy, deepcopy
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.w, self.h = 15, 15
+        self.w, self.h = 20, 20
         self.Matrix = [[0 for x in range(self.w)] for y in range(self.h)]
         self.matrizBase = self.Matrix
         self.robot_x, self.robot_y, self.robot_dir = 0, 0, 0
+        self.wall_x,self.wall_y = 0,0
         for j in range(3):
             if(j==2):
                 self.Matrix[0][2] = 2
@@ -157,6 +158,21 @@ class App(tk.Tk):
     #            button._coords = x_anterior,y_reset
     #            button.grid(row=x_anterior, column=y_reset)
     #
+
+    def move_back_color(self,x,y,color):
+        if(color != 1 and color != 6):
+            button = tk.Button(self, text="", width=1, height=1)
+            button._coords = x,y
+            button.grid(row=x, column=y)
+        elif(color == 1):
+            button = tk.Button(self, text="", width=1, height=1,bg="black")
+            button._coords = x,y
+            button.grid(row=x, column=y)
+        elif(color == 6):
+            button = tk.Button(self, text="", width=1, height=1,bg="blue")
+            button._coords = x,y
+            button.grid(row=x, column=y)
+
     def move_forward(self):
         if(self.robot_dir==0): #UP
             x_anterior, y_anterior = self.robot_x, self.robot_y
@@ -166,12 +182,11 @@ class App(tk.Tk):
             self.display_image(x_atual,y_atual,180)
             for i in range(3):
                 #y_reset = y_anterior+i
-                #cor = self.matrizBase[x_atual+3][y_reset]
+                cor = self.matrizBase[x_atual+3][y_atual+i]
                 #self.Matrix[x+3][y_reset] = self.matrizBase[x_reset][y+3]
                 #print("Valor da cor ",cor) 
-                button = tk.Button(self, text="", width=1, height=1)
-                button._coords = x_atual+3,y_atual+i
-                button.grid(row=x_atual+3, column=y_atual+i)
+                self.move_back_color(x_atual+3,y_atual+i,cor)
+
         elif(self.robot_dir==1): #RIGHT
             x_anterior, y_anterior = self.robot_x, self.robot_y
             x_atual, y_atual = x_anterior, y_anterior+1
@@ -179,13 +194,14 @@ class App(tk.Tk):
             self.create_matriz_image(x_atual,y_atual,"right")
             self.display_image(x_atual,y_atual,90)
             for i in range(3):
-                #y_reset = y_anterior+i
-                #cor = self.matrizBase[x_atual+3][y_reset]
+                y_reset = y_anterior+i
+                cor = self.matrizBase[x_atual+i][y_atual-1]
                 #self.Matrix[x+3][y_reset] = self.matrizBase[x_reset][y+3]
                 #print("Valor da cor ",cor) 
-                button = tk.Button(self, text="", width=1, height=1)
-                button._coords = x_atual+i,y_atual-1
-                button.grid(row=x_atual+i, column=y_atual-1)
+                self.move_back_color(x_atual+i,y_atual-1,cor)
+                #button = tk.Button(self, text="", width=1, height=1)
+                #button._coords = 
+                #button.grid(row=x_atual+i, column=y_atual-1)
         elif(self.robot_dir==2): #DOWN
             x_anterior, y_anterior = self.robot_x, self.robot_y
             x_atual, y_atual = x_anterior+1, y_anterior
@@ -193,13 +209,14 @@ class App(tk.Tk):
             self.create_matriz_image(x_atual,y_atual,"down")
             self.display_image(x_atual,y_atual,0)
             for i in range(3):
-                #y_reset = y_anterior+i
-                #cor = self.matrizBase[x_atual+3][y_reset]
+                y_reset = y_anterior+i
+                cor = self.matrizBase[x_atual-1][y_atual+i]
                 #self.Matrix[x+3][y_reset] = self.matrizBase[x_reset][y+3]
                 #print("Valor da cor ",cor) 
-                button = tk.Button(self, text="", width=1, height=1)
-                button._coords = x_atual-1,y_atual+i
-                button.grid(row=x_atual-1, column=y_atual+i)
+                self.move_back_color(x_atual-1,y_atual+i,cor)
+                #button = tk.Button(self, text="", width=1, height=1)
+                #button._coords = x_atual-1,y_atual+i
+                #button.grid(row=x_atual-1, column=y_atual+i)
         elif(self.robot_dir==3): #LEFT
             x_anterior, y_anterior = self.robot_x, self.robot_y
             x_atual, y_atual = x_anterior, y_anterior-1
@@ -207,13 +224,14 @@ class App(tk.Tk):
             self.create_matriz_image(x_atual,y_atual,"left")
             self.display_image(x_atual,y_atual,270)
             for i in range(3):
-                #y_reset = y_anterior+i
-                #cor = self.matrizBase[x_atual+3][y_reset]
+                y_reset = y_anterior+i
+                cor = self.matrizBase[x_atual+i][y_atual+3]
                 #self.Matrix[x+3][y_reset] = self.matrizBase[x_reset][y+3]
-                #print("Valor da cor ",cor) 
-                button = tk.Button(self, text="", width=1, height=1)
-                button._coords = x_atual+i,y_atual+3
-                button.grid(row=x_atual+i, column=y_atual+3)
+                #print("Valor da cor ",cor)
+                self.move_back_color(x_atual+i,y_atual+3,cor)
+                #button = tk.Button(self, text="", width=1, height=1)
+                #button._coords = x_atual+i,y_atual+3
+                #button.grid(row=x_atual+i, column=y_atual+3)
     
     def turn_right(self):
         x_atual, y_atual = self.robot_x, self.robot_y
@@ -302,52 +320,52 @@ class App(tk.Tk):
         return self.matrizBase[sensor_x][sensor_y]
     
     def looking_forward_obs(self):
-        wall_x, wall_y = 0, 0
+        self.wall_x, self.wall_y = 0, 0
         if(self.robot_dir==0): #UP
-            wall_x=self.robot_x-1
-            wall_y = self.robot_y+1
+            self.wall_x=self.robot_x-1
+            self.wall_y = self.robot_y+1
         if(self.robot_dir==1): #RIGHT
-            wall_x = self.robot_x+1
-            wall_y = self.robot_y+3
+            self.wall_x = self.robot_x+1
+            self.wall_y = self.robot_y+3
         if(self.robot_dir==2): #DOWN
-            wall_x=self.robot_x+3
-            wall_y = self.robot_y+1
+            self.wall_x=self.robot_x+3
+            self.wall_y = self.robot_y+1
         if(self.robot_dir==3): #LEFT
-            wall_x=self.robot_x+1
-            wall_y = self.robot_y-1
-        return self.matrizBase[wall_x][wall_y]
+            self.wall_x=self.robot_x+1
+            self.wall_y = self.robot_y-1
+        return self.matrizBase[self.wall_x][self.wall_y]
 
     def looking_left_obs(self):
-        wall_x, wall_y = 0, 0
+        self.wall_x, self.wall_y = 0, 0
         if(self.robot_dir==0): #UP
-            wall_x=self.robot_x-1
-            wall_y = self.robot_y
+            self.wall_x=self.robot_x-1
+            self.wall_y = self.robot_y
         if(self.robot_dir==1): #RIGHT
-            wall_x = self.robot_x
-            wall_y = self.robot_y+3
+            self.wall_x = self.robot_x
+            self.wall_y = self.robot_y+3
         if(self.robot_dir==2): #DOWN
-            wall_x=self.robot_x+3
-            wall_y = self.robot_y+2
+            self.wall_x=self.robot_x+3
+            self.wall_y = self.robot_y+2
         if(self.robot_dir==3): #LEFT
-            wall_x=self.robot_x+2
-            wall_y = self.robot_y-1
-        return self.matrizBase[wall_x][wall_y]
+            self.wall_x=self.robot_x+2
+            self.wall_y = self.robot_y-1
+        return self.matrizBase[self.wall_x][self.wall_y]
 
     def looking_right_obs(self):
-        wall_x, wall_y = 0, 0
+        self.wall_x, self.wall_y = 0, 0
         if(self.robot_dir==0): #UP
-            wall_x=self.robot_x-1
-            wall_y = self.robot_y+2
+            self.wall_x=self.robot_x-1
+            self.wall_y = self.robot_y+2
         if(self.robot_dir==1): #RIGHT
-            wall_x = self.robot_x+2
-            wall_y = self.robot_y+3
+            self.wall_x = self.robot_x+2
+            self.wall_y = self.robot_y+3
         if(self.robot_dir==2): #DOWN
-            wall_x=self.robot_x+3
-            wall_y = self.robot_y
+            self.wall_x=self.robot_x+3
+            self.wall_y = self.robot_y
         if(self.robot_dir==3): #LEFT
-            wall_x=self.robot_x
-            wall_y = self.robot_y-1
-        return self.matrizBase[wall_x][wall_y]
+            self.wall_x=self.robot_x
+            self.wall_y = self.robot_y-1
+        return self.matrizBase[self.wall_x][self.wall_y]
                 
                    
 
@@ -370,9 +388,9 @@ class App(tk.Tk):
             self.after(2000, self.start_first_part)
             #print(self.sensor_central(), self.sensor_left(), self.sensor_right())
             #print(self.looking_forward_obs())
-            #print(np.array(self.matrizBase))
-            #print(np.array(self.Matrix))
-            if(self.sensor_central()==7):
+            print(np.array(self.matrizBase))
+            print(np.array(self.Matrix))
+            if(self.sensor_central()==7 or self.sensor_left()==7 or self.sensor_right()==7):
                 print("CHEGOU!!!!!")
                 r=0
                 self.display_grid_second_part()
@@ -485,17 +503,20 @@ class App(tk.Tk):
                     self.turn_right()
                 else:
                     self.turn_left()
-            elif(self.looking_left_obs()==7):
-                self.turn_left()
-                self.move_forward()
-                self.turn_right()
-            elif(self.looking_right_obs()==7):
-                self.turn_right()
-                self.move_forward()
-                self.turn_left()
+            elif(self.looking_left_obs() == 7):
+                #self.turn_left()
+                #self.move_forward()
+                #self.turn_right()
+                self.matrizBase[self.wall_x][self.wall_y] = 0
+            elif(self.looking_right_obs() == 7):
+                #self.turn_right()
+                #self.move_forward()
+                #self.turn_left()
+                self.matrizBase[self.wall_x][self.wall_y] = 0
             elif(self.looking_forward_obs() == 7):
-                self.move_forward()
-                self.numberOfOjects += 1
+                #self.move_forward()
+                #self.numberOfOjects += 1
+                self.matrizBase[self.wall_x][self.wall_y] = 0
                 print("OBJETO")
             else:
                 self.move_forward()
@@ -622,14 +643,14 @@ class App(tk.Tk):
         x_ini ,y_ini = 1,1
         self.robot_x, self.robot_y, self.robot_dir = x_ini, y_ini, 1
         obstacles = []
-        for i in range(10):
-            x=random.randint(1, self.h-2)
-            y=random.randint(1, self.w-2)
+        for i in range(5):
+            x=random.randint(4, self.h-5)
+            y=random.randint(4, self.w-5)
             obstacles.append((x,y)) 
             self.Matrix[x][y] = 6
 
         objects = []
-        for i in range(3):
+        for i in range(5):
             x=random.randint(5, self.h-3)
             y=random.randint(5, self.w-3)
             objects.append((x,y)) 
@@ -653,7 +674,7 @@ class App(tk.Tk):
         
         self.create_matriz_image(x_ini,y_ini,"right")
         self.display_image(x_ini,y_ini,90)
-        self.matrizBase = self.Matrix
+        #self.matrizBase = self.Matrix
         
         #self.on_start_button_second_part(x_ini,y_ini)
         buttonStart = tk.Button(self, text="START", width=10, height=1)
