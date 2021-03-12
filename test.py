@@ -25,6 +25,9 @@ class App(tk.Tk):
         super().__init__()
         self.w, self.h = 20, 20
         self.Matrix = [[0 for x in range(self.w)] for y in range(self.h)]
+        self.Objects = []
+        self.ObjectsNum = 0
+        self.SmallWall = False
         self.matrizBase = self.Matrix
         self.robot_x, self.robot_y, self.robot_dir = 0, 0, 0
         self.wall_x,self.wall_y = 0,0
@@ -492,17 +495,77 @@ class App(tk.Tk):
         self.matrizBase = list(map(list, self.Matrix))
         self.start_first_part()
 
+    def move_gmaps(self):
+        self.Objects
+        x = self.robot_x +1
+        y = self.robot_y +1
+        dist = []
+        for i in self.Objects:
+            dist_x = i[0] - x
+            dist_y = i[1] - y
+            dist.append((dist_x,dist_y))
+        now = dist[0]
+        print(now)
+        if(self.SmallWall):
+            p_x = 0
+            p_y = 0
+            if(now[0] < 0):
+                if(self.h > (self.robot_x + 4)):
+                    p_x = self.robot_x + 3
+                    p_y = self.robot_y + now[1]
+                elif(self.robot_x > 4):
+                    p_x = self.robot_x - 3
+                    p_y = self.robot_y + now[1]
+                else:
+                    p_x = int(self.x*random.random())
+                    p_y = int(self.y*random.random())
+            else:
+                if(self.w > (self.robot_y + 4)):
+                    p_y = self.robot_y + 3
+                    p_x = self.robot_x + now[0] + 3
+                elif(self.robot_y > 4):
+                    p_y = self.robot_y - 3
+                    p_x = self.robot_x + now[0] + 3
+                else:
+                    p_x = int(self.x*random.random())
+                    p_y = int(self.y*random.random())
+            if(self.ObjectsNum > len(self.Objects) + 1):
+                self.Objects = self.Objects[2:]
+            self.Objects = [(p_x,p_y)]+self.Objects
+            print(self.Objects)
+
+        if(now[1] == 0):
+            if(now[0] == 0):
+                self.Objects = self.Objects[1:]
+            elif(now[0] < 0):
+                while(self.robot_dir != 0):
+                    self.turn_left()
+            else:
+                while(self.robot_dir != 2):
+                    self.turn_left()
+        elif(now[1] > 0):
+            while(self.robot_dir != 1):
+                self.turn_left()
+        else:
+            while(self.robot_dir != 3):
+                self.turn_left()
+        return
+        
+
     #Função que inicia a parte 2
     def start_second_part(self):
         if(not self.firstPart):
             self.after(500, self.start_second_part)
-            if(self.looking_left_obs() == 6 or self.looking_right_obs() == 6 or self.looking_forward_obs() == 6):
+            self.move_gmaps()
+            if(self.looking_left_obs() == 6 and self.looking_right_obs() == 6 and self.looking_forward_obs() == 6):
                 print("PAREDE")
                 choice = random.random()
                 if(choice<=0.5):
                     self.turn_right()
                 else:
                     self.turn_left()
+            elif(self.looking_left_obs() == 6 or self.looking_right_obs() == 6 or self.looking_forward_obs() == 6):
+                self.SmallWall = True
             elif(self.looking_left_obs() == 7):
                 #self.turn_left()
                 #self.move_forward()
@@ -518,7 +581,9 @@ class App(tk.Tk):
                 #self.numberOfOjects += 1
                 self.matrizBase[self.wall_x][self.wall_y] = 0
                 print("OBJETO")
+                self.ObjectsNum = self.ObjectsNum - 1
             else:
+                self.SmallWall = False
                 self.move_forward()
             
 
@@ -655,7 +720,9 @@ class App(tk.Tk):
             y=random.randint(5, self.w-3)
             objects.append((x,y)) 
             self.Matrix[x][y] = 7
-        
+        self.Objects = sorted(objects)
+        self.ObjectsNum = len(self.Objects)
+        print(self.Objects)
 
         for x in range(self.h):
             for y in range(self.w):
